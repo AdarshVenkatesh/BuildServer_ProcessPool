@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-16"?> 
+<TestRequest>
+  <author>Jim Fawcett</author>
+  <tests>
+	<TestElement>
+      <testName>test1</testName>
+      <testDriver>td4.cs</testDriver>
+      <testCodes>
+        <string>tc4.cs</string>
+      </testCodes>
+    </TestElement>
+  </tests>
+</TestRequest>

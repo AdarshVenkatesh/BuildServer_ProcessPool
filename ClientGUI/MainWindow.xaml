@@ -1,0 +1,213 @@
+﻿<Window x:Class="FederationServers.MainWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:ClientGUI"
+        mc:Ignorable="d"
+        Title="MainWindow" Height="500" Width="1000">
+    <!--
+////////////////////////////////////////////////////////////////////////////////////////
+// MainWindow.xaml : GUI to client to initiate build request creation.                //
+// ver 1.0                                                                            //
+//                                                                                    //
+//Language:     Visual C#                                                             //
+// Platform    : Lenovo 510S Ideapad, Win Pro 10, Visual Studio 2017                  //
+// Application : CSE-681 SMA Project 4                                                //
+// Author      : Adarsh Venkatesh Bodineni,Syracuse University                        //
+// Source      : Dr. Jim Fawcett, EECS, SU                                            //
+////////////////////////////////////////////////////////////////////////////////////////
+    
+    
+      Purpose:
+    This xaml is used to create build request, slect existing build request,to view logs.
+  
+   Required Files:
+     MainWindow.xaml, MainWindow.xaml.cs - view into repository and create build request
+    
+  
+   Maintenance History:
+     ver 1.0 
+     - first release
+    -->
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="*"></RowDefinition>
+        </Grid.RowDefinitions>
+        <TabControl Grid.Row="0" Name="tabCntrl" TabStripPlacement="Top" FontFamily="Tahoma" FontWeight="Medium"  FontSize="12" >
+            <TabItem Name="Home" Header="Home">
+                <Grid Margin="10">
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="*"></RowDefinition>
+                        <RowDefinition Height="25"></RowDefinition>
+                        <RowDefinition Height="10"></RowDefinition>
+                        <RowDefinition Height="25"></RowDefinition>
+                        <RowDefinition Height="*"></RowDefinition>
+                    </Grid.RowDefinitions>
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="*"></ColumnDefinition>
+                        <ColumnDefinition Width="10"></ColumnDefinition>
+                        <ColumnDefinition Width="*"></ColumnDefinition>
+                    </Grid.ColumnDefinitions>
+                    <TextBlock Grid.Row="1" Grid.Column="0" Name="Processes" TextAlignment="Right"  >Select no. of processes</TextBlock>
+                    <ComboBox Grid.Row="1" Grid.Column="2" Name="numberofProcess" IsEditable="False" >
+                        <ComboBoxItem  Name="pro1" IsSelected="True">1</ComboBoxItem>
+                        <ComboBoxItem  Name="pro2">2</ComboBoxItem>
+                        <ComboBoxItem  Name="pro3">3</ComboBoxItem>
+                        <ComboBoxItem  Name="pro4">4</ComboBoxItem>
+                        <ComboBoxItem  Name="pro5">5</ComboBoxItem>
+                    </ComboBox>
+                    <Button Grid.Row="3" Grid.Column="2" Name="StartProcesses" BorderBrush="Aqua" Click="startChildProcesses_Click">Start Child Processes</Button>
+                </Grid>
+            </TabItem>
+            <TabItem Name="BuildRequest" Header="Build A Request">
+                <Grid Margin="10">
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="50"></RowDefinition>
+                        <RowDefinition Height="25"></RowDefinition>
+                        <RowDefinition Height="10"></RowDefinition>
+                        <RowDefinition Height="*"></RowDefinition>
+                        <RowDefinition Height="50"></RowDefinition>
+                    </Grid.RowDefinitions>
+                    <Grid Grid.Row="0">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="600"></ColumnDefinition>
+                            <ColumnDefinition Width="90"></ColumnDefinition>
+                            <ColumnDefinition Width="10"></ColumnDefinition>
+                            <ColumnDefinition Width="180"></ColumnDefinition>
+                            <ColumnDefinition Width="*"></ColumnDefinition>
+                        </Grid.ColumnDefinitions>
+                        <Button Grid.Column="1" Name="addMoreTests" Height="25" BorderBrush="Black" Click="addMoreTests_Click">add More Tests</Button>
+                        <Button Grid.Column="3" Name="clear" Height="25" BorderBrush="Black" Click="clearAll_Click">Clear to create one more request</Button>
+                    </Grid>
+                    <Grid Grid.Row="1">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="180"></ColumnDefinition>
+                            <ColumnDefinition Width="10"></ColumnDefinition>
+                            <ColumnDefinition Width="180"></ColumnDefinition>
+                            <ColumnDefinition Width="200"></ColumnDefinition>
+                            <ColumnDefinition Width="90"></ColumnDefinition>
+                            <ColumnDefinition Width="5"></ColumnDefinition>
+                            <ColumnDefinition Width="120"></ColumnDefinition>
+                            <ColumnDefinition Width="10"></ColumnDefinition>
+                            <ColumnDefinition Width="130"></ColumnDefinition>
+                        </Grid.ColumnDefinitions>
+                        <Button Grid.Column="0" Name="fetchDrivers" BorderBrush="Black" Click="fetchDrivers_Click">Fetch Drivers from Repo</Button>
+                        <Button Grid.Column="2" Name="fetchTestCodes" BorderBrush="Black" Click="fetchTestCodes_Click">Fetch TestCodes from Repo</Button>
+                        <Button Grid.Column="4" Name="createRequest" BorderBrush="Black" Click="Create_Click">Create Request</Button>
+                        <Button Grid.Column="6" Name="saveBuildRequest" BorderBrush="Black" Click="saveBuildRequest_Click">Save Request in Repo</Button>
+                        <Button Grid.Column="8" Name="sendToMotherBuilder" BorderBrush="Black" Click="sendToMotherBuilder_Click">Send to Mother Builder</Button>
+                    </Grid>
+                    <Grid Grid.Row="3">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="180"></ColumnDefinition>
+                            <ColumnDefinition Width="10"></ColumnDefinition>
+                            <ColumnDefinition Width="180"></ColumnDefinition>
+                            <ColumnDefinition Width="10"></ColumnDefinition>
+                            <ColumnDefinition Width="90"></ColumnDefinition>
+                            <ColumnDefinition Width="10"></ColumnDefinition>
+                            <ColumnDefinition Width="180"></ColumnDefinition>
+                            <ColumnDefinition Width="10"></ColumnDefinition>
+                            <ColumnDefinition Width="300"></ColumnDefinition>
+                        </Grid.ColumnDefinitions>
+                        <ListBox Grid.Column="0" Name="leftDriverBox" SelectionMode="Single" BorderBrush="Black"></ListBox>
+                        <ListBox Grid.Column="2" Name="leftTCBox" SelectionMode="Multiple" BorderBrush="Black"></ListBox>
+                        <Grid Grid.Column="4">
+                            <Grid.RowDefinitions>
+                                <RowDefinition Height="*"></RowDefinition>
+                                <RowDefinition Height="30"></RowDefinition>
+                                <RowDefinition Height="10"></RowDefinition>
+                                <RowDefinition Height="30"></RowDefinition>
+                                <RowDefinition Height="*"></RowDefinition>
+                            </Grid.RowDefinitions>
+                            <Button Grid.Row="1" Name="addButton" Content="Add &gt;&gt;" BorderBrush="Black"  Click="Add_Click"></Button>
+                            <Button Grid.Row="3" Name="removeButton" Content="&lt;&lt; Remove" BorderBrush="Black" Click="Remove_Click"></Button>
+                        </Grid>
+                        <Grid Grid.Column="6">
+                            <Grid.RowDefinitions>
+                                <RowDefinition Height="*"></RowDefinition>
+                                <RowDefinition Height="10"></RowDefinition>
+                                <RowDefinition Height="2*"></RowDefinition>
+                            </Grid.RowDefinitions>
+                            <ListBox Grid.Row="0" Name="rightDriverBox" BorderBrush="Black"></ListBox>
+                            <ListBox Grid.Row="2" Name="rightTCBox" BorderBrush="Black"></ListBox>
+                        </Grid>
+                        <TextBox Grid.Column="8" Name="createdBuildRequest" BorderBrush="Black"></TextBox>
+                    </Grid>
+                </Grid>
+            </TabItem>
+            <TabItem Name="viewExistingBuildRequests" Header="View BuildRequests">
+                <Grid>
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="25"></RowDefinition>
+                        <RowDefinition Height="25"></RowDefinition>
+                        <RowDefinition Height="10"></RowDefinition>
+                        <RowDefinition Height="*"></RowDefinition>
+                        <RowDefinition Height="25"></RowDefinition>
+                    </Grid.RowDefinitions>
+                    <Grid Grid.Row="1">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="*"></ColumnDefinition>
+                            <ColumnDefinition Width="190"></ColumnDefinition>
+                            <ColumnDefinition Width="90"></ColumnDefinition>
+                            <ColumnDefinition Width="*"></ColumnDefinition>
+                        </Grid.ColumnDefinitions>
+                        <Button Grid.Column="1" Name="viewBuildRequests"  BorderBrush="Black" Click="displayBuildRequests_Click">Display Build Requests from Repo</Button>
+                    </Grid>
+                    <Grid Grid.Row="3">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="*"></ColumnDefinition>
+                            <ColumnDefinition Width="400"></ColumnDefinition>
+                            <ColumnDefinition Width="10"></ColumnDefinition>
+                            <ColumnDefinition Width="100"></ColumnDefinition>
+                            <ColumnDefinition Width="*"></ColumnDefinition>
+                        </Grid.ColumnDefinitions>
+                        <ListBox Grid.Column="1" Name="buildRequests" BorderBrush="Black" MouseDoubleClick="viewBuildRequest_doubleClick"  ></ListBox>
+                        <Grid Grid.Column="3" >
+                            <Grid.RowDefinitions>
+                                <RowDefinition Height="*"></RowDefinition>
+                                <RowDefinition Height="30"></RowDefinition>
+                                <RowDefinition Height="*"></RowDefinition>
+                            </Grid.RowDefinitions>
+                            <Button Grid.Row="1" Name="sendBuildRequests" BorderBrush="Black" Click="sendBuildRequests_Click">Send to Builder</Button>
+                        </Grid>
+                    </Grid>
+                </Grid>
+            </TabItem>
+            <TabItem Name="viewLogs" Header="View Logs">
+                <Grid Margin="10">
+
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="25"></RowDefinition>
+                        <RowDefinition Height="25"></RowDefinition>
+                        <RowDefinition Height="10"></RowDefinition>
+                        <RowDefinition Height="*"></RowDefinition>
+                        <RowDefinition Height="25"></RowDefinition>
+                    </Grid.RowDefinitions>
+                    <Grid Grid.Row="1">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="*"></ColumnDefinition>
+                            <ColumnDefinition Width="400"></ColumnDefinition>
+                            <ColumnDefinition Width="50"></ColumnDefinition>
+                            <ColumnDefinition Width="400"></ColumnDefinition>
+                            <ColumnDefinition Width="*"></ColumnDefinition>
+                        </Grid.ColumnDefinitions>
+                        <Button Grid.Column="1" Name="viewBuildLogs" BorderBrush="Black" Click="displayBuildLogs_Click">Display Build Logs From Repo</Button>
+                        <Button Grid.Column="3" Name="viewTestLogs" BorderBrush="Black" Click="displayTestLogs_Click">Display Test Logs from Repo</Button>
+                    </Grid>
+                    <Grid Grid.Row="3">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="*"></ColumnDefinition>
+                            <ColumnDefinition Width="400"></ColumnDefinition>
+                            <ColumnDefinition Width="50"></ColumnDefinition>
+                            <ColumnDefinition Width="400"></ColumnDefinition>
+                            <ColumnDefinition Width="*"></ColumnDefinition>
+                        </Grid.ColumnDefinitions>
+                        <ListBox Grid.Column="1" Name="buildLogs" BorderBrush="Black" MouseDoubleClick="buildLog_doubleClick"></ListBox>
+                        <ListBox Grid.Column="3" Name="testLogs" BorderBrush="Black" MouseDoubleClick="testLog_doubleClick"></ListBox>
+                    </Grid>
+                </Grid>
+            </TabItem>
+        </TabControl>
+    </Grid>
+</Window>
